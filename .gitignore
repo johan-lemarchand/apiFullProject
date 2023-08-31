@@ -14,7 +14,12 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
 ###< symfony/phpunit-bridge ###
+/.idea/apiFullProject.iml
+/.idea/php.xml
+/.idea/phpspec.xml
+/.idea/phpunit.xml
+/.idea/workspace.xml
+/.idea/symfony2.xml
+/.idea/vcs.xml
+/.idea/codeception.xml
