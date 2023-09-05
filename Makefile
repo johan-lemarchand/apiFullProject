@@ -119,6 +119,10 @@ sf-mf: ## Make symfony Form
 	$(SYMFONY_CONSOLE) make:form
 .PHONY: sf-mf
 
+sf-mfact: ## Make factory foundry
+	$(SYMFONY_CONSOLE) make:factory
+.PHONY: sf-mfact
+
 sf-perm: ## Fix permissions.
 	chmod -R 777 var
 .PHONY: sf-perm
