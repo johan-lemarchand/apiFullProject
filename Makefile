@@ -1,7 +1,4 @@
 #---Symfony-And-Docker-Makefile---------------#
-# Author: https://github.com/yoanbernabeu
-# License: MIT
-#---------------------------------------------#
 
 #---VARIABLES---------------------------------#
 #---DOCKER---#

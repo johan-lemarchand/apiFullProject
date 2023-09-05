@@ -23,3 +23,4 @@
 /.idea/symfony2.xml
 /.idea/vcs.xml
 /.idea/codeception.xml
+/.php-cs-fixer.cache
