@@ -24,3 +24,5 @@
 /.idea/vcs.xml
 /.idea/codeception.xml
 /.php-cs-fixer.cache
+/.idea/sqldialects.xml
+/.idea/dataSources.xml

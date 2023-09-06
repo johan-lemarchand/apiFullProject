@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://127.0.0.1:52068/apifullproject</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="apifullproject-scalingo" uuid="1aa49363-fd40-4011-99a1-8a26d9b4daaa">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://apifullproj-8316.postgresql.a.osc-fr1.scalingo-dbs.com:30252/apifullproj_8316</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
