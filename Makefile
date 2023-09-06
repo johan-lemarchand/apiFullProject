@@ -119,6 +119,10 @@ sf-mf: ## Make symfony Form
 	$(SYMFONY_CONSOLE) make:form
 .PHONY: sf-mf
 
+sf-mu: ## Make user
+	$(SYMFONY_CONSOLE) make:user
+.PHONY: sf-mu
+
 sf-mfact: ## Make factory foundry
 	$(SYMFONY_CONSOLE) make:factory
 .PHONY: sf-mfact
@@ -259,7 +263,7 @@ before-commit: qa-cs-fixer qa-phpstan qa-security-checker qa-phpcpd qa-lint-twig
 first-install: docker-up composer-install npm-install npm-build sf-perm sf-dc sf-dmm sf-start sf-open ## First install.
 .PHONY: first-install
 
-start: docker-up sf-start sf-open ## Start project.
+start: docker-up sf-start ## Start project.
 .PHONY: start
 
 stop: docker-stop sf-stop ## Stop project.

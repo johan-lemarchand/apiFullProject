@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Factory\ArticleFactory;
+use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -10,6 +11,11 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        ArticleFactory::createMany(40);
+        UserFactory::createMany(10);
+        ArticleFactory::createMany(40, function () {
+            return [
+                'author' => UserFactory::random(),
+            ];
+        });
     }
 }

@@ -10,9 +10,11 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\ArticleRepository;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
@@ -24,12 +26,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     description: 'A blog post.',
     operations: [
-        new Get(),
+        new Get(
+            normalizationContext: [
+                'groups' => ['article:read', 'article:item:get'],
+            ],
+        ),
         new GetCollection(),
         new Post(),
         new Put(),
         new Patch(),
-        new Delete(),
+        new Delete()
     ],
     normalizationContext: [
         'groups' => ['article:read'],
@@ -39,6 +45,21 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     paginationItemsPerPage: 10,
 )]
+#[ApiResource(
+    uriTemplate: '/users/{user_id}/articles.{_format}',
+    operations: [new GetCollection()],
+    uriVariables: [
+        'user_id' => new Link(
+            fromProperty: 'article',
+            fromClass: User::class,
+        )
+    ],
+    normalizationContext: [
+        'groups' => ['article:read'],
+    ]
+)]
+#[ApiFilter(PropertyFilter::class)]
+#[ApiFilter(SearchFilter::class, properties: ['author.username' => 'partial', 'author.lastname' => 'partial'])]
 class Article
 {
     #[ORM\Id]
@@ -47,7 +68,7 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['article:read', 'article:write'])]
+    #[Groups(['article:read', 'article:write', 'user:item:get'])]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
     #[Assert\Length(
@@ -59,28 +80,35 @@ class Article
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['article:read', 'article:write'])]
+    #[Groups(['article:read', 'article:write', 'user:item:get'])]
     #[Assert\NotBlank(message: 'Le contenu est obligatoire.')]
     #[Assert\Length(min: 30, minMessage: 'Le contenu doit comporter au moins {{ limit }} caractères.')]
     private ?string $content = null;
 
     #[ORM\Column]
-    #[Groups('article:read')]
+    #[Groups(['article:read', 'user:item:get'])]
     #[ApiFilter(DateFilter::class)]
     private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups('article:read')]
+    #[Groups(['article:read', 'user:item:get'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups('article:read')]
+    #[Groups(['article:read', 'user:item:get'])]
     private ?string $slug = null;
 
     #[ORM\Column]
-    #[Groups('article:read')]
+    #[Groups(['article:read', 'user:item:get'])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $isPublished = false;
+
+    #[ORM\ManyToOne(inversedBy: 'article')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['article:read', 'article:write'])]
+    #[Assert\Valid]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+    private ?User $author = null;
 
     public function __construct()
     {
@@ -170,6 +198,18 @@ class Article
     public function setIsPublished(bool $isPublished): static
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
 
         return $this;
     }

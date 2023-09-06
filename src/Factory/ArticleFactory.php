@@ -51,6 +51,7 @@ final class ArticleFactory extends ModelFactory
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'isPublished' => self::faker()->boolean(),
             'title' => self::faker()->text(120),
+            'author' => UserFactory::new(),
         ];
     }
 
